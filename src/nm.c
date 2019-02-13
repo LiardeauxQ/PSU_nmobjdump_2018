@@ -20,57 +20,137 @@ static void *stock_file(char *filename)
     return (data);
 }
 
-static void get_symbols(Elf64_Shdr *symtab, Elf64_Shdr *strtab, void *data)
+int is_useless_char(char c)
 {
-    Elf64_Sym *symbols;
-    sym_t *symbols_data;
-    size_t ent_nb = 0;
+    if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') 
+            || (c >= 'A' && c <= 'Z'))
+        return (0);
+    return (1);
+}
 
-    if (!symtab->sh_entsize)
-        return;
-    ent_nb = symtab->sh_size / symtab->sh_entsize;
-    symbols = malloc(ent_nb * sizeof(Elf64_Sym));
-    symbols_data = malloc(ent_nb * sizeof(sym_t));
-    symbols = data + symtab->sh_offset;
-    for (size_t i = 0 ; i < ent_nb ; i++) {
-        symbols_data[i].name = (char *)(data + strtab->sh_offset
-                + symbols[i].st_name);
-        printf("elf symbol: %s\n", symbols_data[i].name);
+int ascii_cmp(char *s1, char *s2)
+{
+    size_t i = 0;
+    size_t j = 0;
+
+    for (; i < strlen(s1) && j < strlen(s2) ; i++, j++) {
+        if (s1[i] == s2[j])
+            continue;
+        while (s1[i++] != '\0' && is_useless_char(s1[i]))
+            j++;
+        while (s2[j++] != '\0' && is_useless_char(s2[j]))
+            i++;
+        return ((s1[i] < s2[j]) ? -1 : 1);
     }
+    if (i == j)
+        return (0);
+    return ((i < j) ? -1 : 1);
+}
+
+int check_order(sym_t *symbols, size_t sym_nb)
+{
+    for (size_t i = 0 ; i < sym_nb ; i++) {
+        if (symbols[i].name == NULL)
+                continue;
+        for (size_t j = 0 ; j < sym_nb ; j++) {
+            if (symbols[j].name == NULL)
+                continue;
+            if (ascii_cmp(symbols[i].name, symbols[j].name) == -1) {
+                printf("%s %s %d %d\n", symbols[i].name, symbols[j].name, i, j);
+                return (1);
+            }
+        }
+    }
+    return (0);
+}
+
+void order_symbols(sym_t *symbols, size_t sym_nb)
+{
+    char *tmp = NULL;
+
+    for (size_t i = 0 ; i < sym_nb ; i++) {
+        if (symbols[i].name == NULL)
+                continue;
+        for (size_t j = 0 ; j < sym_nb ; j++) {
+            if (symbols[j].name == NULL || i == j)
+                continue;
+            int val = ascii_cmp(symbols[i].name, symbols[j].name);
+            if (val == 1) {
+                tmp = symbols[j].name;
+                symbols[j].name = symbols[i].name;
+                symbols[i].name = tmp;
+            }
+        }
+    }
+    if (check_order(symbols, sym_nb))
+        order_symbols(symbols, sym_nb);
 }
 
 int nm(char *filename)
 {
     void *data = stock_file(filename);
     Elf64_Ehdr *header = NULL;
-    Elf64_Shdr *secs = NULL;
+    sym_t *symbols = NULL;
     Elf64_Shdr *symtab = NULL;
-    Elf64_Shdr *strtab = NULL;
-    Elf64_Shdr *shstrtab = NULL;
+    size_t sym_nb = 0;
 
     if (data == NULL)
         return (EXIT_ERROR);
     header = data;
-    secs = calloc(1, header->e_shnum * sizeof(Elf64_Shdr));
-    secs = data + header->e_shoff;
-    shstrtab = &secs[header->e_shstrndx];
-    for (size_t i = 0 ; i < header->e_shnum ; i++) {
-        if (!strcmp(data + shstrtab->sh_offset + secs[i].sh_name, ".symtab"))
-            symtab = &secs[i];
-        if (!strcmp(data + shstrtab->sh_offset + secs[i].sh_name, ".strtab"))
-            strtab = &secs[i];
+    symbols = get_symbols(header, data);
+    get_symbols_type(header, &symbols, data);
+    symtab = get_section(header, ".symtab", data);
+    if (symtab->sh_entsize != 0)
+        sym_nb = symtab->sh_size / symtab->sh_entsize;
+    for (size_t i = 0 ; i < sym_nb ; i++) {
+        if (symbols[i].name == NULL)
+            continue;
+        printf("%c %s\n", symbols[i].type, symbols[i].name);
     }
-    get_symbols(symtab, strtab, data);
-    return (0);
+    order_symbols(symbols, sym_nb);
+    printf("\n\n AFTER \n\n");
+    for (size_t i = 0 ; i < sym_nb ; i++) {
+        if (symbols[i].name == NULL)
+            continue;
+        printf("%c %s\n", symbols[i].type, symbols[i].name);
+    }
+    return (EXIT_SUCCESS);
 }
 
 int main(int ac, char **av)
 {
     int rt = 0;
-    
-    if (ac == 1)
+    char **test = malloc(10 * sizeof(char*));
+
+    /*if (ac == 1)
         rt = nm("a.out");
     else
-        rt = nm(av[1]);
+        rt = nm(av[1]);*/
+    test[0] = strdup("main");
+    test[1] = strdup("start");
+    test[2] = strdup("boby");
+    test[3] = strdup("main");
+    test[4] = strdup("arthur");
+    test[5] = NULL;
+    for (size_t i = 0 ; i < 5 ; i++) {
+        for (size_t j = 0 ; j < 5 ; j++) {
+            if (ascii_cmp(test[i], test[j]) == 1) {
+                char *tmp = test[j];
+                test[j] = test[i];
+                test[i] = tmp;
+            }
+        }
+    }
+    for (size_t i = 0 ; i < 5 ; i++) {
+        for (size_t j = 0 ; j < 5 ; j++) {
+            if (ascii_cmp(test[i], test[j]) == 1) {
+                char *tmp = test[j];
+                test[j] = test[i];
+                test[i] = tmp;
+            }
+        }
+    }
+    for (size_t i = 0 ; i < 5 ; i++)
+        printf("%s\n", test[i]);
     return (rt);
 }

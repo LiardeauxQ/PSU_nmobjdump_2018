@@ -9,7 +9,8 @@ INC	=	-I ./inc
 
 SRCDIR	= ./src/
 
-NM_SRCS	=	nm.c
+NM_SRCS	=	section_utils.c	\
+			nm.c
 
 OBJDUMP_SRCS	=	objdump.c
 
