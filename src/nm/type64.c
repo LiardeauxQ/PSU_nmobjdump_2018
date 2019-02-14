@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** type.c
+** type64.c
 ** File description:
-** type
+** type 64
 */
 
 #include "nm.h"
@@ -67,7 +67,7 @@ static char get_tmp(uint64_t flags, uint32_t type)
     return ('d');
 }
 
-char get_type(Elf64_Shdr *section, Elf64_Shdr *strtab,
+char get_type64(Elf64_Shdr *section, Elf64_Shdr *strtab,
         sym_t *symbol, void *data)
 {
     char type = 0;

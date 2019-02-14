@@ -18,10 +18,10 @@ static void init_symbol(Elf64_Sym *sym, sym_t *data)
         data->name = NULL;
 }
 
-sym_t *get_symbols(Elf64_Ehdr *header, void *data)
+sym_t *get_symbols64(Elf64_Ehdr *header, void *data)
 {
-    Elf64_Shdr *symtab = get_section(header, ".symtab", data);
-    Elf64_Shdr *strtab = get_section(header, ".strtab", data);
+    Elf64_Shdr *symtab = get_section64(header, ".symtab", data);
+    Elf64_Shdr *strtab = get_section64(header, ".strtab", data);
     Elf64_Sym *symbols = NULL;
     sym_t *symbols_data = NULL;
     size_t ent_nb = 0;
@@ -41,7 +41,7 @@ sym_t *get_symbols(Elf64_Ehdr *header, void *data)
     return (symbols_data);
 }
 
-Elf64_Shdr *get_section(Elf64_Ehdr *header, char *name, void *data)
+Elf64_Shdr *get_section64(Elf64_Ehdr *header, char *name, void *data)
 {
     Elf64_Shdr *sections = data + header->e_shoff;
  
@@ -53,9 +53,9 @@ Elf64_Shdr *get_section(Elf64_Ehdr *header, char *name, void *data)
     return (NULL);
 }
 
-void get_symbols_type(Elf64_Ehdr *header, sym_t **symbols, void *data)
+void get_symbols_type64(Elf64_Ehdr *header, sym_t **symbols, void *data)
 {
-    Elf64_Shdr *symtab = get_section(header, ".symtab", data);
+    Elf64_Shdr *symtab = get_section64(header, ".symtab", data);
     Elf64_Shdr *sections = data + header->e_shoff;
     size_t nb = 0;
 
@@ -67,7 +67,7 @@ void get_symbols_type(Elf64_Ehdr *header, sym_t **symbols, void *data)
             continue;
         if ((*symbols)[i].link > header->e_shnum)
             continue;
-        (*symbols)[i].type = get_type(&sections[(*symbols)[i].link],
+        (*symbols)[i].type = get_type64(&sections[(*symbols)[i].link],
                 &sections[header->e_shstrndx],
                 &((*symbols)[i]), data);
     }

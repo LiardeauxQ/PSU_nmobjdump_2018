@@ -3,3 +3,4 @@ my_objdump
 *tmp*
 *.o
 *.a
+vgcore*

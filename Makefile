@@ -9,10 +9,13 @@ INC	=	-I ./inc
 
 SRCDIR	= ./src/
 
-NM_SRCS	=	section_utils.c	\
-			sort_symbols.c	\
-			type.c	\
-			nm.c
+NM_SRCS	=	nm/section_utils64.c	\
+			nm/section_utils32.c	\
+			nm/sort_symbols.c	\
+			nm/type32.c	\
+			nm/type64.c	\
+			nm/nm.c	\
+			manage_error.c
 
 OBJDUMP_SRCS	=	objdump.c
 
