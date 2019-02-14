@@ -17,7 +17,7 @@ NM_SRCS	=	nm/section_utils64.c	\
 			nm/nm.c	\
 			manage_error.c
 
-OBJDUMP_SRCS	=	objdump.c
+OBJDUMP_SRCS	=	objdump/objdump.c
 
 CFLAGS	=	-Wall -g $(INC)#-Wextra
 

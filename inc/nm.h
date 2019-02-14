@@ -8,6 +8,8 @@
 #ifndef NM_H_
 #	define NM_H_
 
+#define _GNU_SOURCE
+
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -16,6 +18,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #define EXIT_ERROR 84
 

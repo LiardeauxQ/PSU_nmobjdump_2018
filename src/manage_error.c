@@ -10,11 +10,13 @@
 int check_file_stat(struct stat *statbuf, char *filename)
 {
     if (S_ISDIR(statbuf->st_mode)) {
-        fprintf(stderr, "nm: Warning: '%s' is a directory\n", filename);
+        fprintf(stderr, "%s: Warning: '%s' is a directory\n",
+                program_invocation_short_name, filename);
         return (-1);
     }
     if (access(filename, F_OK | R_OK)) {
-        fprintf(stderr, "nm: %s: Permission denied\n", filename);
+        fprintf(stderr, "%s: %s: Permission denied\n",
+                program_invocation_short_name, filename);
         return (-1);
     }
     return (0);
@@ -29,7 +31,8 @@ int check_data_conformity(void *data, char *filename)
     int nd_cond = (*type != ET_REL && *type != ET_EXEC && *type != ET_DYN);
 
     if (st_cond || nd_cond) {
-        fprintf(stderr, "nm: %s: file format not recognized\n", filename);
+        fprintf(stderr, "%s: %s: file format not recognized\n",
+                program_invocation_short_name, filename);
         return (-1);
     }
     if (e_ident[4] == ELFCLASS32)
