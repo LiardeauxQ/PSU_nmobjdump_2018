@@ -9,8 +9,6 @@
 
 static void init_symbol(Elf64_Sym *sym, sym_t *data)
 {
-    if (sym->st_shndx > 100)
-        printf("%d %d\n", sym->st_shndx, sym->st_name);
     data->info_type = ELF64_ST_TYPE(sym->st_info);
     data->bind = ELF64_ST_BIND(sym->st_info);
     data->type = 0;
@@ -53,67 +51,6 @@ Elf64_Shdr *get_section(Elf64_Ehdr *header, char *name, void *data)
         return (&sections[i]);
     }
     return (NULL);
-}
-
-static char get_common_type(sym_t *symbol)
-{
-    if (symbol->index == SHN_COMMON)
-        return ('C');
-    if (symbol->index == SHN_ABS)
-        return ('A');
-    if (symbol->index == SHN_UNDEF)
-        return ('U');
-    if (symbol->bind == STB_WEAK) {
-        if (!symbol->value)
-            return (symbol->info_type == STT_OBJECT ? 'v' : 'w');
-        else
-            return (symbol->info_type == STT_OBJECT ? 'V' : 'W');
-    }
-    if (symbol->bind == STB_GNU_UNIQUE)
-        return ('u');
-    return ('?');
-}
-
-static char get_nobits_type(Elf64_Shdr *section)
-{
-    if (section->sh_type == SHT_NOBITS) {
-        if (section->sh_flags == (SHF_WRITE | SHF_ALLOC | SHF_TLS)
-                || section->sh_flags == (SHF_ALLOC | SHF_WRITE))
-            return ('b');
-        else if (section->sh_flags == (SHF_WRITE | SHF_ALLOC | SHF_IA_64_SHORT))
-            return ('s');
-    }
-    return ('?');
-}
-
-static char get_progbits_type(Elf64_Shdr *section)
-{
-    if (section->sh_type == SHT_PROGBITS) {
-        switch (section->sh_flags) {
-        case (SHF_ALLOC):
-            return ('r');
-        case (SHF_ALLOC | SHF_WRITE):
-            return ('d');
-        case (SHF_ALLOC | SHF_EXECINSTR):
-            return ('t');
-        case (SHF_ALLOC | SHF_WRITE | SHF_IA_64_SHORT):
-            return ('g');
-        case (SHT_NULL):
-            return ('n');
-        }
-    }
-    return ('?');
-}
-
-static char get_type(Elf64_Shdr *section, Elf64_Shdr *strtab,
-        sym_t *symbol, void *data)
-{
-    char type = '?';
-
-    type = (type == '?') ? get_common_type(symbol) : type;
-    type = (type == '?') ? get_nobits_type(section) : type;
-    type = (type == '?') ? get_progbits_type(section) : type;
-    return (type);
 }
 
 void get_symbols_type(Elf64_Ehdr *header, sym_t **symbols, void *data)
