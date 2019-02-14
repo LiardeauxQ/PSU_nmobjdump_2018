@@ -15,6 +15,18 @@ static int is_useless_char(char c)
     return (1);
 }
 
+static char *remove_useless_char(char *s)
+{
+    size_t i;
+
+    for (i = 0 ; s[i] != '\0' ; i++) {
+        if ((s[i] >= '0' && s[i] <= '9') || (s[i] >= 'a' && s[i] <= 'z')
+                || (s[i] >= 'A' && s[i] <= 'Z'))
+            return (s + i);
+    }
+    return (s + i);
+}
+
 int ascii_cmp(char *s1, char *s2)
 {
     size_t i = 0;
@@ -23,21 +35,21 @@ int ascii_cmp(char *s1, char *s2)
     char c2 = 0;
 
     for (; i < strlen(s1) && j < strlen(s2) ; i++, j++) {
-        while (s1[i] != '\0' && is_useless_char(s1[i])) {
-            i++;
-        }
-        while (s2[j] != '\0' && is_useless_char(s2[j])) {
-            j++;
-        }
+        for (i ; s1[i] != '\0' && is_useless_char(s1[i]) ; i++);
+        for (j ; s2[j] != '\0' && is_useless_char(s2[j]) ; j++);
         c1 = (s1[i] >= 'A' && s1[i] <= 'Z') ? s1[i] + 32 : s1[i];
         c2 = (s2[i] >= 'A' && s2[j] <= 'Z') ? s2[j] + 32 : s2[j];
         if (c1 == c2)
             continue;
         return ((c1 < c2) ? -1 : 1);
     }
-    if (i == j)
-        return (0);
-    return ((i < j) ? -1 : 1);
+    if (i == strlen(s1) && j == strlen(s2)) {
+        if (i == j)
+            return (strcasecmp(s1, s2));
+        return (i < j ? 1 : -1);
+    }
+    return (strcmp(remove_useless_char(s1),
+                remove_useless_char(s2)) < 0 ? -1 : 1);
 }
 
 static void switch_symbol(sym_t *s1, sym_t *s2)

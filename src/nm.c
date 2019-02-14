@@ -61,6 +61,6 @@ int main(int ac, char **av)
     if (ac == 1)
         rt = nm("a.out");
     else
-        rt = nm(av[1]); 
+        rt = nm(av[1]);
     return (rt);
 }
