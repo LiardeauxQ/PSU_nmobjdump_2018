@@ -44,11 +44,11 @@ sym_t *get_symbols32(Elf32_Ehdr *header, void *data)
 Elf32_Shdr *get_section32(Elf32_Ehdr *header, char *name, void *data)
 {
     Elf32_Shdr *sections = data + header->e_shoff;
- 
+
     for (size_t i = 0 ; i < header->e_shnum ; i++) {
-        if (!strcmp(data + sections[header->e_shstrndx].sh_offset 
+        if (!strcmp(data + sections[header->e_shstrndx].sh_offset
                     + sections[i].sh_name, name))
-        return (&sections[i]);
+            return (&sections[i]);
     }
     return (NULL);
 }
