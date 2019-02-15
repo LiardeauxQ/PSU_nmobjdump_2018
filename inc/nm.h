@@ -64,6 +64,10 @@ char get_type32(Elf32_Shdr *section, Elf32_Shdr *strtab,
 int check_file_stat(struct stat *statebuf, char *filename);
 int check_data_conformity(void *data, char *filename);
 
+/* stock_file.c */
+
+void *stock_file(char *filename);
+
 /* nm.c */
 
 int nm64(void *data);

@@ -17,7 +17,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#define EXIT_ERROR 84
+#define EXIT_ERROR	84
 
 /* section_utils64.c */
 
@@ -31,6 +31,20 @@ Elf32_Shdr *get_section32(Elf32_Ehdr *header, char *name, void *data);
 
 int check_file_stat(struct stat *statebuf, char *filename);
 int check_data_conformity(void *data, char *filename);
+
+/* stock_file.c */
+
+void *stock_file(char *filename);
+
+/* options_functions.c */
+
+int display_fill_header(void *data, char *filename);
+int display_sections_content(void *data, char *filename);
+
+/* flags.c */
+
+unsigned int compute_flags(Elf64_Ehdr *header, void *data);
+void print_flags(unsigned int flags);
 
 /* objdump.c */
 
