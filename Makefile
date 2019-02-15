@@ -20,7 +20,8 @@ NM_SRCS	=	nm/section_utils64.c	\
 
 OBJDUMP_SRCS	=	objdump/objdump.c	\
 					stock_file.c	\
-					objdump/options_functions.c	\
+					objdump/options_functions64.c	\
+					objdump/options_functions32.c	\
 					objdump/flags.c	\
 					manage_error.c
 

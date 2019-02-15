@@ -36,14 +36,20 @@ int check_data_conformity(void *data, char *filename);
 
 void *stock_file(char *filename);
 
-/* options_functions.c */
+/* options_functions64.c */
 
-int display_fill_header(void *data, char *filename);
-int display_sections_content(void *data, char *filename);
+int display_fill_header64(void *data, char *filename);
+int display_sections_content64(void *data, char *filename);
+
+/* options_functions32.c */
+
+int display_fill_header32(void *data, char *filename);
+int display_sections_content32(void *data, char *filename);
 
 /* flags.c */
 
-unsigned int compute_flags(Elf64_Ehdr *header, void *data);
+unsigned int compute_flags32(Elf32_Ehdr *header, void *data);
+unsigned int compute_flags64(Elf64_Ehdr *header, void *data);
 void print_flags(unsigned int flags);
 
 /* objdump.c */

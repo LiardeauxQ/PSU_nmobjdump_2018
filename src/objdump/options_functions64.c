@@ -1,21 +1,18 @@
 /*
 ** EPITECH PROJECT, 2018
-** options_functions.c
+** options_functions64.c
 ** File description:
-** options functions
+** options functions for 64 bits architecture
 */
 
 #include "objdump.h"
 
-static char const *format[] = {"x86", "x86-64"};
-
-int display_fill_header(void *data, char *filename)
+int display_fill_header64(void *data, char *filename)
 {
     Elf64_Ehdr *header = data;
-    unsigned char arch = (header->e_ident[EI_CLASS] == ELFCLASS32) ? 32 : 64;
-    unsigned int flags = compute_flags(header, data);
+    unsigned int flags = compute_flags64(header, data);
 
-    printf("\n%s:\tfile format elf%d-%s\n", filename, arch, format[arch / 64]);
+    printf("\n%s:\tfile format elf64-x86_64\n", filename);
     printf("architecture: %s flags 0x%08x:\n",
             (header->e_machine == EM_X86_64) ? "i386:x86_64" : "Unknown",
             flags);
@@ -54,7 +51,7 @@ static void print_ascii_values(Elf64_Shdr *section, void *data, int pos)
     }
 }
 
-void print_section(Elf64_Shdr *section, Elf64_Shdr *strtab, void *data)
+static void print_section(Elf64_Shdr *section, Elf64_Shdr *strtab, void *data)
 {
     char *name = data + strtab->sh_offset + section->sh_name;
 
@@ -70,7 +67,7 @@ void print_section(Elf64_Shdr *section, Elf64_Shdr *strtab, void *data)
     }
 }
 
-int display_sections_content(void *data, char *filename)
+int display_sections_content64(void *data, char *filename)
 {
     Elf64_Ehdr *header = data;
     Elf64_Shdr *secs = data + header->e_shoff;
