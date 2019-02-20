@@ -29,7 +29,7 @@ int nm64(void *data)
     size_t sym_nb = 0;
 
     if (symtab == NULL)
-        return (EXIT_ERROR);
+        return (1);
     get_symbols_type64(header, &symbols, data);
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
@@ -46,7 +46,7 @@ int nm32(void *data)
     size_t sym_nb = 0;
 
     if (symtab == NULL)
-        return (EXIT_ERROR);
+        return (1);
     get_symbols_type32(header, &symbols, data);
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
@@ -55,17 +55,31 @@ int nm32(void *data)
     return (EXIT_SUCCESS);
 }
 
-int main(int ac, char **av)
+static int nm(char *filename)
 {
-    char *filename = (ac == 1) ? "a.out" : av[1];
-    void *data = NULL;
+    void *data = stock_file(filename);
     int arch = 0;
 
-    data = stock_file(filename);
     if (data == NULL)
-        return (EXIT_ERROR);
+        return (1);
     arch = check_data_conformity(data, filename);
-    if (arch <= 0)
-        return (EXIT_ERROR);
-    return ((arch == 64) ? nm64(data) : nm32(data));
+    if (arch == 1)
+        return (1);
+    return (arch == 64 ? nm64(data) : nm32(data));
+}
+
+int main(int ac, char **av)
+{
+    int rt = 0;
+    int tmp = 0;
+
+    if (ac == 1)
+        return (nm("a.out"));
+    for (size_t i = 1 ; i < ac ; i++) {
+        if (ac > 2)
+            printf("\n%s:\n", av[i]);
+        tmp = nm(av[i]);
+        rt = (rt == 0) ? tmp : rt;
+    }
+    return (rt);
 }

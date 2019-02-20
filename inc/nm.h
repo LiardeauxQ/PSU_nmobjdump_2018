@@ -19,6 +19,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <dirent.h>
 
 #define EXIT_ERROR 84
 

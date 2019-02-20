@@ -21,9 +21,11 @@ void *stock_file(char *filename)
     }
     if (stat(filename, &statbuf) == -1)
         return (NULL);
-    if (check_file_stat(&statbuf, filename) == -1)
+    if (check_file_stat(&statbuf, filename) == 1)
         return (NULL); 
     data = mmap(0, statbuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (statbuf.st_size < sizeof(Elf32_Ehdr))
+        return (NULL);
     close(fd);
     return (data);
 }

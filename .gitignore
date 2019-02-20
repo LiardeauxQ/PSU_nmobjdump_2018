@@ -4,3 +4,4 @@ my_objdump
 *.o
 *.a
 vgcore*
+tests

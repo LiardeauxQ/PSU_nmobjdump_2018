@@ -14,7 +14,7 @@ int objdump(char *filename)
     int arch = 0;
 
     if (data == NULL)
-        return (84);
+        return (1);
     arch = check_data_conformity(data, filename);
     if (arch == 64) {
         ret = display_fill_header64(data, filename);
@@ -25,7 +25,7 @@ int objdump(char *filename)
         ret = (display_sections_content32(data, filename) == 0) ? ret : 84;
         return (ret);
     }
-    return (84);
+    return (1);
 }
 
 int main(int ac, char **av)

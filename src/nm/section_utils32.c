@@ -26,7 +26,7 @@ sym_t *get_symbols32(Elf32_Ehdr *header, void *data)
     sym_t *symbols_data = NULL;
     size_t ent_nb = 0;
 
-    if (!symtab->sh_entsize)
+    if (symtab == NULL || strtab == NULL || !symtab->sh_entsize)
         return (NULL);
     ent_nb = symtab->sh_size / symtab->sh_entsize;
     symbols = malloc(ent_nb * sizeof(Elf32_Sym));
@@ -45,6 +45,8 @@ Elf32_Shdr *get_section32(Elf32_Ehdr *header, char *name, void *data)
 {
     Elf32_Shdr *sections = data + header->e_shoff;
 
+    if (header->e_shstrndx > header->e_shnum || header->e_shoff == 0)
+        return (NULL);
     for (size_t i = 0 ; i < header->e_shnum ; i++) {
         if (!strcmp(data + sections[header->e_shstrndx].sh_offset
                     + sections[i].sh_name, name))
@@ -58,14 +60,16 @@ void get_symbols_type32(Elf32_Ehdr *header, sym_t **symbols, void *data)
     Elf32_Shdr *symtab = get_section32(header, ".symtab", data);
     Elf32_Shdr *sections = data + header->e_shoff;
     size_t nb = 0;
+    uint16_t shnum = (header->e_shnum >= SHN_LORESERVE)
+        ? sections[0].sh_size : header->e_shnum;
 
-    if (!symtab->sh_entsize)
+    if (symtab == NULL || !symtab->sh_entsize || header->e_shoff == 0)
         return;
     nb = symtab->sh_size / symtab->sh_entsize;
     for (size_t i = 0 ; i < nb ; i++) {
         if ((*symbols)[i].name == NULL)
             continue;
-        if ((*symbols)[i].link > header->e_shnum)
+        if ((*symbols)[i].link > shnum)
             continue;
         (*symbols)[i].type = get_type32(&sections[(*symbols)[i].link],
                 &sections[header->e_shstrndx],
