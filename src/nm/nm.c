@@ -21,13 +21,17 @@ void print_symbols(sym_t *symbols, size_t sym_nb)
     }
 }
 
-int nm64(void *data)
+int nm64(char *filename, void *data)
 {
     Elf64_Ehdr *header = data;
-    sym_t *symbols = get_symbols64(header, data);
-    Elf64_Shdr *symtab = get_section64(header, ".symtab", data);
+    sym_t *symbols = NULL;
+    Elf64_Shdr *symtab = NULL;
     size_t sym_nb = 0;
 
+    if (check_sections_values64(header, filename, data))
+        return (1);
+    symbols = get_symbols64(header, data);
+    symtab = get_section64(header, ".symtab", data);
     if (symtab == NULL)
         return (1);
     get_symbols_type64(header, &symbols, data);
@@ -38,13 +42,17 @@ int nm64(void *data)
     return (EXIT_SUCCESS);
 }
 
-int nm32(void *data)
+int nm32(char *filename, void *data)
 {
     Elf32_Ehdr *header = data;
-    sym_t *symbols = get_symbols32(header, data);
-    Elf32_Shdr *symtab = get_section32(header, ".symtab", data);
+    sym_t *symbols = NULL;
+    Elf32_Shdr *symtab = NULL;
     size_t sym_nb = 0;
 
+    if (check_sections_values32(header, filename, data))
+        return (1);
+    symbols = get_symbols32(header, data);
+    symtab = get_section32(header, ".symtab", data);
     if (symtab == NULL)
         return (1);
     get_symbols_type32(header, &symbols, data);
@@ -65,7 +73,7 @@ static int nm(char *filename)
     arch = check_data_conformity(data, filename);
     if (arch == 1)
         return (1);
-    return (arch == 64 ? nm64(data) : nm32(data));
+    return (arch == 64 ? nm64(filename, data) : nm32(filename, data));
 }
 
 int main(int ac, char **av)

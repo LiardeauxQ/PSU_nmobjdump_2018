@@ -5,8 +5,8 @@
 ** flags
 */
 
-#ifndef __BFD_H_SEEN__
-#define __BFD_H_SEEN__
+#ifndef FLAGS_HPP_
+#	define FLAGS_HPP_
 
 #define BFD_NO_FLAGS    0x00
 #define HAS_RELOC       0x01
@@ -18,7 +18,6 @@
 #define DYNAMIC         0x40
 #define WP_TEXT         0x80
 #define D_PAGED         0x100
-
 #define HANDLE_FLAGS	5
 
 typedef struct flag_s {

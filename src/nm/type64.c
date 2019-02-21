@@ -54,7 +54,7 @@ static char get_progbits_type(uint64_t flags)
     }
 }
 
-static char get_tmp(uint64_t flags, uint32_t type)
+static char get_type(uint64_t flags, uint32_t type)
 {
     if ((flags & SHF_WRITE) != SHF_WRITE) {
         if (type != SHT_GROUP)
@@ -80,7 +80,7 @@ char get_type64(Elf64_Shdr *section, Elf64_Shdr *strtab,
     if (section->sh_type == SHT_FINI_ARRAY
             || section->sh_type == SHT_INIT_ARRAY)
         type = (type == 0) ? 't' : type;
-    type = (type == 0) ? get_tmp(section->sh_flags, section->sh_type) : type;
+    type = (type == 0) ? get_type(section->sh_flags, section->sh_type) : type;
     type = (symbol->bind == STB_GLOBAL &&
             (type >= 'a' && type < 'v')) ? (type - 32) : type;
     return (type == 0 ? '?' : type);

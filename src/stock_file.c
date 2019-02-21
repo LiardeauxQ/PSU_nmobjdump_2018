@@ -29,3 +29,39 @@ void *stock_file(char *filename)
     close(fd);
     return (data);
 }
+
+int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data)
+{
+    struct stat statbuf;
+    Elf64_Shdr *sections = data + header->e_shoff;
+    uint16_t shnum = (header->e_shnum >= SHN_LORESERVE)
+        ? sections[0].sh_size : header->e_shnum;
+
+    if (stat(filename, &statbuf) == -1)
+        return (1);
+    if (header->e_shoff == 0 || header->e_shoff > statbuf.st_size)
+        return (1);
+    for (size_t i = 0 ; i < shnum ; i++) {
+        if (sections[i].sh_offset > statbuf.st_size)
+            return (1);
+    }
+    return (0);
+}
+
+int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data)
+{
+    struct stat statbuf;
+    Elf32_Shdr *sections = data + header->e_shoff;
+    uint16_t shnum = (header->e_shnum >= SHN_LORESERVE)
+        ? sections[0].sh_size : header->e_shnum;
+
+    if (stat(filename, &statbuf) == -1)
+        return (1);
+    if (header->e_shoff == 0 || header->e_shoff > statbuf.st_size)
+        return (1);
+    for (size_t i = 0 ; i < shnum ; i++) {
+        if (sections[i].sh_offset > statbuf.st_size)
+            return (1);
+    }
+    return (0);
+}
