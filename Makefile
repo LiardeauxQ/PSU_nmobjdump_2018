@@ -36,17 +36,17 @@ OBJDUMP_OBJS	=	$(OBJDUMP_PREFIX_SRCS:.c=.o)
 NM_NAME			=	my_nm
 OBJDUMP_NAME	=	my_objdump
 
-all:	$(NM_NAME) $(OBJDUMP_NAME)
+all:	nm objdump
 
-$(NM_NAME):	$(NM_OBJS)
+nm:	$(NM_OBJS)
 	@printf 'FLAGS: $(LDFLAGS) $(CFLAGS)\n'
 	@printf 'Create: ./$(NM_NAME)\n'
-	@$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
+	@$(CC) -o $(NM_NAME) $^ $(CFLAGS) $(LDFLAGS)
 
-$(OBJDUMP_NAME):	$(OBJDUMP_OBJS)
+objdump:	$(OBJDUMP_OBJS)
 	@printf 'FLAGS: $(LDFLAGS) $(CFLAGS)\n'
 	@printf 'Create: ./$(OBJDUMP_NAME)\n'
-	@$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
+	@$(CC) -o $(OBJDUMP_NAME) $^ $(CFLAGS) $(LDFLAGS)
 
 %.o:	%.c
 	@printf '[OK] Building: $<\n'
