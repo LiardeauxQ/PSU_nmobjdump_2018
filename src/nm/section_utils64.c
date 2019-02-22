@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** section_utils.c
+** section_utils64.c
 ** File description:
-** section_utils
+** section_utils for 64 arch
 */
 
 #include "nm.h"
@@ -44,7 +44,7 @@ sym_t *get_symbols64(Elf64_Ehdr *header, void *data)
 Elf64_Shdr *get_section64(Elf64_Ehdr *header, char *name, void *data)
 {
     Elf64_Shdr *sections = data + header->e_shoff;
- 
+
     if (header->e_shstrndx > header->e_shnum || header->e_shoff == 0)
         return (NULL);
     for (size_t i = 0 ; i < header->e_shnum ; i++) {

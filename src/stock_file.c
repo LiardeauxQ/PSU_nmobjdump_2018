@@ -15,8 +15,7 @@ void *stock_file(char *filename)
 
     fd = open(filename, O_RDONLY);
     if (fd == -1) {
-        fprintf(stderr, "%s: '%s': No such file\n",
-                program_invocation_short_name, filename);
+        fprintf(stderr, "%s: '%s': No such file\n", find_bin_name(), filename);
         return (NULL);
     }
     if (stat(filename, &statbuf) == -1)

@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** section_utils.c
+** section_utils32.c
 ** File description:
-** section_utils
+** section_utils for 32 arch
 */
 
 #include "nm.h"

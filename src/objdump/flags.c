@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2018
-** flags32.c
+** flags.c
 ** File description:
 ** flags
 */

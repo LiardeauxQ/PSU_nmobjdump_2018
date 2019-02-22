@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2017
+## EPITECH PROJECT, 2018
 ## Makefile
 ## File description:
 ## Makefile
@@ -64,4 +64,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all fclean re
+.PHONY: all nm objdump clean fclean re

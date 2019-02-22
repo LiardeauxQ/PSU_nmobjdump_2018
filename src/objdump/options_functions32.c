@@ -75,7 +75,7 @@ int display_sections_content32(void *data, char *filename)
 
     for (size_t i = 0 ; i < header->e_shnum ; i++) {
         if (secs[i].sh_type != SHT_NOBITS && secs[i].sh_type
-                != SHT_SYMTAB && data + secs[i].sh_offset != (void*)shstrtab
+                != SHT_SYMTAB && data + secs[i].sh_offset != (void *)shstrtab
                 && strcmp(&shstrtab[secs[i].sh_name], ".strtab") != 0)
             print_section(&secs[i], &secs[header->e_shstrndx], data);
     }

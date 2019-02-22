@@ -1,12 +1,12 @@
 /*
 ** EPITECH PROJECT, 2018
-** nm.h
+** objdump.h
 ** File description:
-** nm header
+** objdump header
 */
 
-#ifndef NM_H_
-#	define NM_H_
+#ifndef OBJUDMP_H_
+#	define OBJDUMP_H_
 
 #include <string.h>
 #include <stdio.h>
