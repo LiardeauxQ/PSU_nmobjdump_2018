@@ -21,8 +21,6 @@
 #include <errno.h>
 #include <dirent.h>
 
-#define EXIT_ERROR 84
-
 typedef struct sym_s {
     unsigned char info_type;
     unsigned char bind;
@@ -68,11 +66,13 @@ int check_data_conformity(void *data, char *filename);
 /* stock_file.c */
 
 void *stock_file(char *filename);
+int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data);
+int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data);
 
 /* nm.c */
 
-int nm64(void *data);
-int nm32(void *data);
+int nm64(char *filename, void *data);
+int nm32(char *filename, void *data);
 
 inline char *find_bin_name(void)
 {
