@@ -7,15 +7,19 @@
 
 #include "nm.h"
 
-static void init_symbol(Elf32_Sym *sym, sym_t *data)
+static void init_symbol(sym_t *sym_data, Elf32_Sym *sym, Elf32_Shdr *strtab,
+        void *data)
 {
-    data->info_type = ELF32_ST_TYPE(sym->st_info);
-    data->bind = ELF32_ST_BIND(sym->st_info);
-    data->type = 0;
-    data->link = sym->st_shndx;
-    data->value = sym->st_value;
+    sym_data->info_type = ELF32_ST_TYPE(sym->st_info);
+    sym_data->bind = ELF32_ST_BIND(sym->st_info);
+    sym_data->type = 0;
+    sym_data->link = sym->st_shndx;
+    sym_data->value = sym->st_value;
     if (sym->st_name == 0)
-        data->name = NULL;
+        sym_data->name = NULL;
+    else
+        sym_data->name = (char *)(data + strtab->sh_offset
+                + sym->st_name);
 }
 
 sym_t *get_symbols32(Elf32_Ehdr *header, void *data)
@@ -29,14 +33,11 @@ sym_t *get_symbols32(Elf32_Ehdr *header, void *data)
     if (symtab == NULL || strtab == NULL || !symtab->sh_entsize)
         return (NULL);
     ent_nb = symtab->sh_size / symtab->sh_entsize;
-    symbols = malloc(ent_nb * sizeof(Elf32_Sym));
     symbols_data = malloc(ent_nb * sizeof(sym_t));
     symbols = data + symtab->sh_offset;
     for (size_t i = 0 ; i < ent_nb ; i++) {
-        symbols_data[i].name = (char *)(data + strtab->sh_offset
-                + symbols[i].st_name);
         symbols_data[i].index = i;
-        init_symbol(&symbols[i], &symbols_data[i]);
+        init_symbol(&symbols_data[i], &symbols[i], strtab, data);
     }
     return (symbols_data);
 }

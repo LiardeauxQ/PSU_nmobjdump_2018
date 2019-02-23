@@ -39,6 +39,7 @@ int nm64(char *filename, void *data)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
     order_symbols(symbols, sym_nb);
     print_symbols(symbols, sym_nb);
+    free(symbols);
     return (EXIT_SUCCESS);
 }
 
@@ -60,6 +61,7 @@ int nm32(char *filename, void *data)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
     order_symbols(symbols, sym_nb);
     print_symbols(symbols, sym_nb);
+    free(symbols);
     return (EXIT_SUCCESS);
 }
 

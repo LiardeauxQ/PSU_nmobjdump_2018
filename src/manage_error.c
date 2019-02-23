@@ -17,9 +17,7 @@ int check_file_stat(struct stat *statbuf, char *filename)
         return (1);
     }
     if (access(filename, F_OK | R_OK)) {
-        fprintf(stderr, "%s: %s: Permission denied\n", find_bin_name(),
-                filename);
-        return (1);
+        return (print_error(filename, "Permission denied"));
     }
     dir = opendir(filename);
     if (dir != NULL) {
@@ -39,14 +37,11 @@ int check_data_conformity(void *data, char *filename)
             || e_ident[2] != ELFMAG2 || e_ident[3] != ELFMAG3);
     int nd_cond = (*type != ET_REL && *type != ET_EXEC && *type != ET_DYN);
 
-    if (st_cond || nd_cond) {
-        fprintf(stderr, "%s: %s: file format not recognized\n",
-                find_bin_name(), filename);
-        return (1);
-    }
+    if (st_cond || nd_cond)
+        return (print_error(filename, "File format not recognized"));
     if (e_ident[4] == ELFCLASS32)
         return (32);
     else if (e_ident[4] == ELFCLASS64)
         return (64);
-    return (1);
+    return (print_error(filename, "File format not recognized"));
 }

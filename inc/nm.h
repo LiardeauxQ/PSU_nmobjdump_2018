@@ -80,4 +80,11 @@ static inline char *find_bin_name(void)
         : "objdump");
 }
 
+static inline int print_error(char *filename, char *error_msg)
+{
+    fprintf(stderr, "%s: %s: %s\n", find_bin_name(),
+        filename, error_msg);
+    return (1);
+}
+
 #endif
