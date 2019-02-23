@@ -36,13 +36,13 @@ int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data)
 
     if (header->e_shnum >= SHN_LORESERVE)
         return (print_error(filename, "File truncated")); 
-    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0)
+    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized")); 
     if (header->e_shoff > statbuf.st_size)
-        return (print_error(filename, "No symbols"));
+        return (print_error(filename, "File truncated"));
     for (size_t i = 0 ; i < shnum ; i++) {
-        if (sections[i].sh_offset > statbuf.st_size)
-            return (print_error(filename, "File format not recognized"));
+        if (sections[i].sh_offset >= statbuf.st_size)
+            return (print_error(filename, "No symbols"));
     }
     return (0);
 }
@@ -56,13 +56,13 @@ int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data)
 
     if (header->e_shnum >= SHN_LORESERVE)
         return (print_error(filename, "File truncated")); 
-    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0)
+    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized"));
     if (header->e_shoff > statbuf.st_size)
         return (print_error(filename, "File truncated"));
     for (size_t i = 0 ; i < shnum ; i++) {
-        if (sections[i].sh_offset > statbuf.st_size)
-            return (print_error(filename, "File format not recognized"));
+        if (sections[i].sh_offset >= statbuf.st_size)
+            return (print_error(filename, "No symbols"));
     }
     return (0);
 }

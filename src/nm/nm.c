@@ -33,7 +33,7 @@ int nm64(char *filename, void *data)
     symbols = get_symbols64(header, data);
     symtab = get_section64(header, ".symtab", data);
     if (symtab == NULL)
-        return (1);
+        return (print_error(filename, "File format not recognized"));
     get_symbols_type64(header, &symbols, data);
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
@@ -55,7 +55,7 @@ int nm32(char *filename, void *data)
     symbols = get_symbols32(header, data);
     symtab = get_section32(header, ".symtab", data);
     if (symtab == NULL)
-        return (1);
+        return (print_error(filename, "File format not recognized"));
     get_symbols_type32(header, &symbols, data);
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
@@ -80,16 +80,13 @@ static int nm(char *filename)
 
 int main(int ac, char **av)
 {
-    int rt = 0;
-    int tmp = 0;
-
     if (ac == 1)
         return (nm("a.out"));
     for (size_t i = 1 ; i < ac ; i++) {
         if (ac > 2)
             printf("\n%s:\n", av[i]);
-        tmp = nm(av[i]);
-        rt = (rt == 0) ? tmp : rt;
+        if (nm(av[i]))
+            return (1);
     }
-    return (rt);
+    return (0);
 }
