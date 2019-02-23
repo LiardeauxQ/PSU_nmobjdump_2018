@@ -1,14 +1,14 @@
 /*
 ** EPITECH PROJECT, 2018
-** section_utils64.c
+** section_utils.c
 ** File description:
-** section_utils for 64 arch
+** description
 */
 
 #include "nm.h"
 
 static void init_symbol(sym_t *sym_data, Elf64_Sym *sym, Elf64_Shdr *strtab,
-        void *data)
+    void *data)
 {
     sym_data->info_type = ELF64_ST_TYPE(sym->st_info);
     sym_data->bind = ELF64_ST_BIND(sym->st_info);
@@ -19,7 +19,7 @@ static void init_symbol(sym_t *sym_data, Elf64_Sym *sym, Elf64_Shdr *strtab,
         sym_data->name = NULL;
     else
         sym_data->name = (char *)(data + strtab->sh_offset
-                    + sym->st_name);
+            + sym->st_name);
 }
 
 sym_t *get_symbols64(Elf64_Ehdr *header, void *data)
@@ -49,8 +49,8 @@ Elf64_Shdr *get_section64(Elf64_Ehdr *header, char *name, void *data)
     if (header->e_shstrndx > header->e_shnum || header->e_shoff == 0)
         return (NULL);
     for (size_t i = 0 ; i < header->e_shnum ; i++) {
-        if (!strcmp(data + sections[header->e_shstrndx].sh_offset 
-                    + sections[i].sh_name, name))
+        if (!strcmp(data + sections[header->e_shstrndx].sh_offset
+            + sections[i].sh_name, name))
         return (&sections[i]);
     }
     return (NULL);
@@ -73,7 +73,7 @@ void get_symbols_type64(Elf64_Ehdr *header, sym_t **symbols, void *data)
         if ((*symbols)[i].link >= shnum)
             continue;
         (*symbols)[i].type = get_type64(&sections[(*symbols)[i].link],
-                &sections[header->e_shstrndx],
-                &((*symbols)[i]), data);
+            &sections[header->e_shstrndx],
+            &((*symbols)[i]), data);
     }
 }

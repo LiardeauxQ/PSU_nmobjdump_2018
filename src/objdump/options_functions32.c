@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** options_functions32.c
+** options_functions.c
 ** File description:
-** options functions for 32 bits architecture
+** description
 */
 
 #include "objdump.h"

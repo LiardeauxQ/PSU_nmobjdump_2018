@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** flags.c
 ** File description:
-** flags
+** description
 */
 
 #include "flags.h"

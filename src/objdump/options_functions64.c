@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** options_functions64.c
+** options_functions.c
 ** File description:
-** options functions for 64 bits architecture
+** description
 */
 
 #include "objdump.h"

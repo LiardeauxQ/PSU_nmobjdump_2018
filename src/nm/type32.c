@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** type32.c
+** type.c
 ** File description:
-** type 32
+** description
 */
 
 #include "nm.h"

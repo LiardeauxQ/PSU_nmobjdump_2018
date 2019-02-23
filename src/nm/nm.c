@@ -2,9 +2,8 @@
 ** EPITECH PROJECT, 2018
 ** nm.c
 ** File description:
-** nm
+** description
 */
-
 #include "nm.h"
 
 void print_symbols(sym_t *symbols, size_t sym_nb)
@@ -13,11 +12,11 @@ void print_symbols(sym_t *symbols, size_t sym_nb)
         if (symbols[i].name == NULL || symbols[i].type == 0)
             continue;
         if (!symbols[i].value && (symbols[i].type == 'U'
-                    || symbols[i].type == 'w' || symbols[i].type == 'W'))
+                || symbols[i].type == 'w' || symbols[i].type == 'W'))
             printf("%16c %c %s\n", ' ', symbols[i].type, symbols[i].name);
         else
             printf("%016llx %c %s\n", symbols[i].value, symbols[i].type,
-                    symbols[i].name);
+                symbols[i].name);
     }
 }
 

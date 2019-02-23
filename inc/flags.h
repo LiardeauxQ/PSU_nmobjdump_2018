@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** flags.h
 ** File description:
-** flags
+** flags header
 */
 
 #ifndef FLAGS_HPP_

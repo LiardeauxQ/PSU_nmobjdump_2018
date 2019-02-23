@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** manage_error.c
 ** File description:
-** manage_error
+** description
 */
 
 #include "nm.h"
@@ -13,7 +13,7 @@ int check_file_stat(struct stat *statbuf, char *filename)
 
     if (S_ISDIR(statbuf->st_mode)) {
         fprintf(stderr, "%s: Warning: '%s' is a directory\n", find_bin_name(),
-                filename);
+            filename);
         return (1);
     }
     if (access(filename, F_OK | R_OK)) {
@@ -22,7 +22,7 @@ int check_file_stat(struct stat *statbuf, char *filename)
     dir = opendir(filename);
     if (dir != NULL) {
         fprintf(stderr, "%s: Warning: '%s' is a directory\n",
-                find_bin_name(), filename);
+            find_bin_name(), filename);
         closedir(dir);
         return (1);
     }

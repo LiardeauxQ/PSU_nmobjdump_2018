@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
-** type64.c
+** type.c
 ** File description:
-** type 64
+** description
 */
 
 #include "nm.h"

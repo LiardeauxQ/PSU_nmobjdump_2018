@@ -2,9 +2,8 @@
 ** EPITECH PROJECT, 2018
 ** objdump.c
 ** File description:
-** objdump
+** description
 */
-
 #include "nm.h"
 #include "objdump.h"
 

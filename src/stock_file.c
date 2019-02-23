@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** stock_file.c
 ** File description:
-** stock file
+** description
 */
 
 #include "nm.h"
@@ -18,7 +18,7 @@ void *stock_file(char *filename)
         return (print_error(filename, "No such file") == 1 ? NULL : NULL);
     if (stat(filename, &statbuf) == -1)
         return (NULL);
-    if (check_file_stat(&statbuf, filename) == 1)
+    else if (check_file_stat(&statbuf, filename) == 1)
         return (NULL); 
     data = mmap(0, statbuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     if (statbuf.st_size < sizeof(Elf32_Ehdr))
@@ -36,7 +36,8 @@ int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data)
 
     if (header->e_shnum >= SHN_LORESERVE)
         return (print_error(filename, "File truncated")); 
-    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0 || shnum == 0)
+    else if (stat(filename, &statbuf) == -1
+            || header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized")); 
     if (header->e_shoff > statbuf.st_size)
         return (print_error(filename, "File truncated"));

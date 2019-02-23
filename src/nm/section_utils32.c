@@ -1,10 +1,9 @@
 /*
 ** EPITECH PROJECT, 2018
-** section_utils32.c
+** section_utils.c
 ** File description:
-** section_utils for 32 arch
+** description
 */
-
 #include "nm.h"
 
 static void init_symbol(sym_t *sym_data, Elf32_Sym *sym, Elf32_Shdr *strtab,
@@ -19,7 +18,7 @@ static void init_symbol(sym_t *sym_data, Elf32_Sym *sym, Elf32_Shdr *strtab,
         sym_data->name = NULL;
     else
         sym_data->name = (char *)(data + strtab->sh_offset
-                + sym->st_name);
+            + sym->st_name);
 }
 
 sym_t *get_symbols32(Elf32_Ehdr *header, void *data)
@@ -50,7 +49,7 @@ Elf32_Shdr *get_section32(Elf32_Ehdr *header, char *name, void *data)
         return (NULL);
     for (size_t i = 0 ; i < header->e_shnum ; i++) {
         if (!strcmp(data + sections[header->e_shstrndx].sh_offset
-                    + sections[i].sh_name, name))
+                + sections[i].sh_name, name))
             return (&sections[i]);
     }
     return (NULL);
@@ -73,7 +72,7 @@ void get_symbols_type32(Elf32_Ehdr *header, sym_t **symbols, void *data)
         if ((*symbols)[i].link > shnum)
             continue;
         (*symbols)[i].type = get_type32(&sections[(*symbols)[i].link],
-                &sections[header->e_shstrndx],
-                &((*symbols)[i]), data);
+            &sections[header->e_shstrndx],
+            &((*symbols)[i]), data);
     }
 }

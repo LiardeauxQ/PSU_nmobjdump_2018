@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2018
 ** sort_symbols.c
 ** File description:
-** sort symbols
+** description
 */
 
 #include "nm.h"
@@ -49,7 +49,7 @@ int ascii_cmp(char *s1, char *s2)
         return (i < j ? 1 : -1);
     }
     return (strcmp(remove_useless_char(s1),
-                remove_useless_char(s2)) < 0 ? -1 : 1);
+        remove_useless_char(s2)) < 0 ? -1 : 1);
 }
 
 static void switch_symbol(sym_t *s1, sym_t *s2)
