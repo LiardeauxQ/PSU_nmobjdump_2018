@@ -74,7 +74,7 @@ int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data);
 int nm64(char *filename, void *data);
 int nm32(char *filename, void *data);
 
-inline char *find_bin_name(void)
+static inline char *find_bin_name(void)
 {
     return ((strcmp(program_invocation_short_name, "my_nm") == 0) ? "nm"
         : "objdump");
