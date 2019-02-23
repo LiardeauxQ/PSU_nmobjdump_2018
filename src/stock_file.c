@@ -14,8 +14,10 @@ void *stock_file(char *filename)
     int fd = 0;
 
     fd = open(filename, O_RDONLY);
-    if (fd == -1)
-        return (print_error(filename, "No such file") == 1 ? NULL : NULL);
+    if (fd == -1) {
+        fprintf(stderr, "%s: '%s': No such file\n", find_bin_name(), filename);
+        return (NULL);
+    }
     if (stat(filename, &statbuf) == -1)
         return (NULL);
     else if (check_file_stat(&statbuf, filename) == 1)
@@ -41,6 +43,8 @@ int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data)
         return (print_error(filename, "File format not recognized")); 
     if (header->e_shoff > statbuf.st_size)
         return (print_error(filename, "File truncated"));
+    else if (header->e_version != EV_CURRENT)
+        return (print_error(filename, "File format not recognized"));
     for (size_t i = 0 ; i < shnum ; i++) {
         if (sections[i].sh_offset >= statbuf.st_size)
             return (print_error(filename, "No symbols"));
