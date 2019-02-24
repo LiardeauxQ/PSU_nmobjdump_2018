@@ -7,7 +7,7 @@
 
 #include "nm.h"
 
-int nm64(char *filename, int file_size, void *data)
+int nm64(char *filename, int file_size, void *data, int argc)
 {
     Elf64_Ehdr *header = data;
     sym_t *symbols = NULL;
@@ -24,12 +24,14 @@ int nm64(char *filename, int file_size, void *data)
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
     order_symbols(symbols, sym_nb);
+    if (argc > 2)
+        printf("\n%s:\n", filename);
     print_symbols(symbols, sym_nb);
     free(symbols);
     return (EXIT_SUCCESS);
 }
 
-int nm32(char *filename, int file_size, void *data)
+int nm32(char *filename, int file_size, void *data, int argc)
 {
     Elf32_Ehdr *header = data;
     sym_t *symbols = NULL;
@@ -46,6 +48,8 @@ int nm32(char *filename, int file_size, void *data)
     if (symtab->sh_entsize != 0)
         sym_nb = symtab->sh_size / symtab->sh_entsize;
     order_symbols(symbols, sym_nb);
+    if (argc > 2)
+        printf("\n%s:\n", filename);
     print_symbols(symbols, sym_nb);
     free(symbols);
     return (EXIT_SUCCESS);

@@ -107,8 +107,8 @@ int nm_with_data(void *data, int file_size, char *filename);
 
 /* nm_architecture.c */
 
-int nm64(char *filename, int file_size, void *data);
-int nm32(char *filename, int file_size, void *data);
+int nm64(char *filename, int file_size, void *data, int argc);
+int nm32(char *filename, int file_size, void *data, int argc);
 
 static inline char *find_bin_name(void)
 {

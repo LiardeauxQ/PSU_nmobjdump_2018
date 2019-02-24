@@ -53,26 +53,6 @@ unsigned int compute_flags64(Elf64_Ehdr *hdr, void *data)
     return (flags);
 }
 
-/*unsigned int compute_flags64(Elf64_Ehdr *header, void *data)
-{
-    Elf32_Shdr *secs = data + header->e_shoff;
-    unsigned int flags = 0;
-
-    if (header->e_type == ET_EXEC)
-        flags |= EXEC_P;
-    if (header->e_type == ET_DYN)
-        flags |= DYNAMIC;
-    if (header->e_type == ET_REL)
-        flags |= HAS_RELOC;
-    for (size_t i = 0 ; i < header->e_shnum ; i++) {
-        if (secs[i].sh_type == SHT_DYNAMIC)
-            flags |= D_PAGED;
-        if (secs[i].sh_type == SHT_SYMTAB || secs[i].sh_type == SHT_DYNSYM)
-            flags |= HAS_SYMS;
-    }
-    return (flags);
-}*/
-
 void print_flags(unsigned int flags)
 {
     int first = 0;

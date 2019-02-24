@@ -26,12 +26,11 @@ int nm_with_data(void *data, int file_size, char *filename)
 
     if (arch == 1)
         return (1);
-    printf("\n%s:\n", filename);
-    return (arch == 64 ? nm64(filename, file_size, data) : nm32(filename,
-                file_size, data));
+    return (arch == 64 ? nm64(filename, file_size, data, 3)
+            : nm32(filename, file_size, data, 3));
 }
 
-static int nm(char *filename)
+static int nm(char *filename, int argc)
 {
     struct stat statbuf;
     void *data = stock_file(filename);
@@ -47,19 +46,20 @@ static int nm(char *filename)
     arch = check_data_conformity(data, filename);
     if (arch == 1)
         return (1);
-    return (arch == 64 ? nm64(filename, statbuf.st_size, data)
-            : nm32(filename, statbuf.st_size, data));
+    return (arch == 64 ? nm64(filename, statbuf.st_size, data, argc)
+            : nm32(filename, statbuf.st_size, data, argc));
 }
 
 int main(int ac, char **av)
 {
+    int ret = 0;
+    int tmp = 0;
+
     if (ac == 1)
-        return (nm("a.out"));
+        return (nm("a.out", ac));
     for (int i = 1 ; i < ac ; i++) {
-        if (ac > 2)
-            printf("\n%s:\n", av[i]);
-        if (nm(av[i]))
-            return (1);
+        tmp = nm(av[i], ac);
+        ret = (tmp == 1) ? tmp : ret;
     }
-    return (0);
+    return (ret);
 }
