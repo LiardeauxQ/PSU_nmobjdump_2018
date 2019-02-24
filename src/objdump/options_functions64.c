@@ -78,12 +78,14 @@ int display_sections_content64(void *data)
         return (1);
     for (size_t i = 0 ; i < hdr->e_shnum ; i++) {
         name = shstrtab + secs[i].sh_name;
-        if ((hdr->e_type == ET_REL && secs[i].sh_type == SHT_RELA)
-                || secs[i].sh_size == 0 || secs[i].sh_type == SHT_NOBITS
-                || !strcmp(name, ".bss") || !strcmp(name, ".strtab")
-                || !strcmp(name, ".symtab") || !strcmp(name, ".shstrtab"))
-            continue;
-        print_section(&secs[i], &secs[hdr->e_shstrndx], data);
-    }
+        if (secs[i].sh_size && secs[i].sh_type != SHT_NOBITS
+                && secs[i].sh_type != SHT_SYMTAB
+                && (secs[i].sh_type != SHT_STRTAB
+                    || !strcmp(name, ".dynstr"))
+                && ((secs[i].sh_flags & SHF_ALLOC)
+                    || (secs[i].sh_type != SHT_RELA
+                        && secs[i].sh_type != SHT_REL)))
+            print_section(&secs[i], &secs[hdr->e_shstrndx], data);
+     }
     return (0);
 }
