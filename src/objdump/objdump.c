@@ -32,7 +32,7 @@ int objdump_with_data(void *data, int file_size, char *filename)
 
     file_size++;
     if (arch == 1)
-        return (print_error(filename, "File format not recognized"));
+        return (1);
     return ((arch == 64) ? objdump64(filename, data)
             : objdump32(filename, data));
 }
@@ -56,7 +56,7 @@ int main(int ac, char **av)
 
     if (ac == 1)
         return (objdump("a.out"));
-    for (size_t i = 1 ; av[i] != NULL ; i++) {
+    for (size_t i = 1 ; i < ac ; i++) {
         tmp = objdump(av[i]);
         ret = (tmp == 1) ? tmp : ret;
     }

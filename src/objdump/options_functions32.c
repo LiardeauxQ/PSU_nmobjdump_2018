@@ -12,8 +12,8 @@ int display_fill_header32(void *data, char *filename)
     Elf32_Ehdr *header = data;
     unsigned int flags = compute_flags32(header, data);
 
-    printf("\n%s:\tfile format elf32-x86\n", filename);
-    printf("architecture: %s flags 0x%08x:\n",
+    printf("\n%s:     file format elf32-x86\n", filename);
+    printf("architecture: %s, flags 0x%08x:\n",
             (header->e_machine == EM_386) ? "i386:x86" : "Unknown",
             flags);
     print_flags(flags);

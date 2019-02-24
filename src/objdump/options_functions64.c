@@ -12,8 +12,8 @@ int display_fill_header64(void *data, char *filename)
     Elf64_Ehdr *header = data;
     unsigned int flags = compute_flags64(header, data);
 
-    printf("\n%s:\tfile format elf64-x86_64\n", filename);
-    printf("architecture: %s flags 0x%08x:\n",
+    printf("\n%s:     file format elf64-x86_64\n", filename);
+    printf("architecture: %s, flags 0x%08x:\n",
             (header->e_machine == EM_X86_64) ? "i386:x86_64" : "Unknown",
             flags);
     print_flags(flags);
