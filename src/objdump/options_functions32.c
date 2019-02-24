@@ -14,7 +14,7 @@ int display_fill_header32(void *data, char *filename)
 
     printf("\n%s:     file format elf32-x86\n", filename);
     printf("architecture: %s, flags 0x%08x:\n",
-            (header->e_machine == EM_386) ? "i386:x86" : "Unknown",
+            (header->e_machine == EM_386) ? "i386" : "Unknown",
             flags);
     print_flags(flags);
     printf("start address 0x%08x\n\n", header->e_entry);
