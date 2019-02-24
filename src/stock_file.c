@@ -23,14 +23,14 @@ void *stock_file(char *filename)
     else if (check_file_stat(&statbuf, filename) == 1)
         return (NULL); 
     data = mmap(0, statbuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    if (statbuf.st_size < sizeof(Elf32_Ehdr))
+    if (statbuf.st_size < (long int)sizeof(Elf32_Ehdr))
         return (NULL);
     close(fd);
     return (data);
 }
 
-int check_sections_values64(Elf64_Ehdr *header, char *filename, int file_size,
-        void *data)
+int check_sections_values64(Elf64_Ehdr *header, char *filename,
+        long int file_size, void *data)
 {
     Elf64_Shdr *sections = data + header->e_shoff;
     uint16_t shnum = (header->e_shnum == 0)
@@ -40,19 +40,19 @@ int check_sections_values64(Elf64_Ehdr *header, char *filename, int file_size,
         return (print_error(filename, "File truncated")); 
     else if (header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized")); 
-    if (header->e_shoff > file_size)
+    if (header->e_shoff > (long unsigned int)file_size)
         return (print_error(filename, "File truncated"));
     else if (header->e_version != EV_CURRENT)
         return (print_error(filename, "File format not recognized"));
     for (size_t i = 0 ; i < shnum ; i++) {
-        if (sections[i].sh_offset >= file_size)
+        if (sections[i].sh_offset >= (long unsigned int)file_size)
             return (print_error(filename, "No symbols"));
     }
     return (0);
 }
 
-int check_sections_values32(Elf32_Ehdr *header, char *filename, int file_size,
-        void *data)
+int check_sections_values32(Elf32_Ehdr *header, char *filename,
+        long int file_size, void *data)
 {
     Elf32_Shdr *sections = data + header->e_shoff;
     uint16_t shnum = (header->e_shnum == 0)

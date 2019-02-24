@@ -9,8 +9,8 @@ INC	=	-I ./inc
 
 SRCDIR	= ./src/
 
-SHARED_SRCS = nm/archive_manager.c	\
-			  nm/archive_utils.c	\
+SHARED_SRCS = archive_manager.c	\
+			  archive_utils.c	\
 			  stock_file.c	\
 			  manage_error.c
 
@@ -59,6 +59,7 @@ objdump:	$(SHARED_OBJS) $(OBJDUMP_OBJS)
 clean:
 	@rm -f $(NM_OBJS)
 	@rm -f $(OBJDUMP_OBJS)
+	@rm -f $(SHARED_OBJS)
 	@printf 'Clean : OK\n'
 
 fclean: clean

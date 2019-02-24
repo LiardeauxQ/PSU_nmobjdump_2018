@@ -81,10 +81,10 @@ int check_data_conformity(void *data, char *filename);
 /* stock_file.c */
 
 void *stock_file(char *filename);
-int check_sections_values64(Elf64_Ehdr *header, char *filename, int file_size,
-    void *data);
-int check_sections_values32(Elf32_Ehdr *header, char *filename, int file_size,
-    void *data);
+int check_sections_values64(Elf64_Ehdr *header, char *filename,
+    long int file_size, void *data);
+int check_sections_values32(Elf32_Ehdr *header, char *filename,
+    long int file_size, void *data);
 
 /* archive_utils.c */
 

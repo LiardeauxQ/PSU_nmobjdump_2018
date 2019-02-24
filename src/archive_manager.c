@@ -32,7 +32,7 @@ int parse_archive_file(void *data, char *filename,
     struct stat statbuf;
     ar_hdr_t *array = NULL;
     size_t size = 0;
-    size_t current_size = 0;
+    long int current_size = 0;
 
     if (stat(filename, &statbuf) == -1)
         return (1);
