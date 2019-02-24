@@ -51,10 +51,14 @@ int objdump(char *filename)
 
 int main(int ac, char **av)
 {
+    int tmp = 0;
+    int ret = 0;
+
     if (ac == 1)
         return (objdump("a.out"));
-    for (size_t i = 1 ; av[i] != NULL ; i++)
-        if (objdump(av[i]) == 1)
-            return (1);
-    return (0);
+    for (size_t i = 1 ; av[i] != NULL ; i++) {
+        tmp = objdump(av[i]);
+        ret = (tmp == 1) ? tmp : ret;
+    }
+    return (ret);
 }
