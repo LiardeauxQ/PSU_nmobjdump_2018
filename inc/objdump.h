@@ -36,12 +36,12 @@ void *stock_file(char *filename);
 /* options_functions64.c */
 
 int display_fill_header64(void *data, char *filename);
-int display_sections_content64(void *data, char *filename);
+int display_sections_content64(void *data);
 
 /* options_functions32.c */
 
 int display_fill_header32(void *data, char *filename);
-int display_sections_content32(void *data, char *filename);
+int display_sections_content32(void *data);
 
 /* flags.c */
 

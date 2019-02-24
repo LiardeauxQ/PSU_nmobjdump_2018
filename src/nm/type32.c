@@ -67,8 +67,7 @@ static char get_type(uint32_t flags, uint32_t type)
     return ('d');
 }
 
-char get_type32(Elf32_Shdr *section, Elf32_Shdr *strtab,
-        sym_t *symbol, void *data)
+char get_type32(Elf32_Shdr *section, sym_t *symbol)
 {
     char type = 0;
 

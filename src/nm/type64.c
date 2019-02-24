@@ -67,8 +67,7 @@ static char get_type(uint64_t flags, uint32_t type)
     return ('d');
 }
 
-char get_type64(Elf64_Shdr *section, Elf64_Shdr *strtab,
-        sym_t *symbol, void *data)
+char get_type64(Elf64_Shdr *section, sym_t *symbol)
 {
     char type = 0;
 

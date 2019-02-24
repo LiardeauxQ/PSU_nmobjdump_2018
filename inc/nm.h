@@ -67,13 +67,11 @@ int ascii_cmp(char *s1, char *s2);
 
 /* type64.c */
 
-char get_type64(Elf64_Shdr *section, Elf64_Shdr *strtab,
-    sym_t *symbol, void *data);
+char get_type64(Elf64_Shdr *section, sym_t *symbol);
 
 /* type32.c */
 
-char get_type32(Elf32_Shdr *section, Elf32_Shdr *strtab,
-    sym_t *symbol, void *data);
+char get_type32(Elf32_Shdr *section, sym_t *symbol);
 
 /* manage_error.c */
 
@@ -99,9 +97,15 @@ void update_name(char *strtab, ar_hdr_t *cvt);
 
 ar_hdr_t create_archive_header(void *data);
 int is_archive_format(void *data);
-int parse_archive_file(void *data, char *filename);
+int parse_archive_file(void *data, char *filename,
+    int (*func)(void*, int, char*));
 
 /* nm.c */
+
+void print_symbols(sym_t *symbols, size_t sym_nb);
+int nm_with_data(void *data, int file_size, char *filename);
+
+/* nm_architecture.c */
 
 int nm64(char *filename, int file_size, void *data);
 int nm32(char *filename, int file_size, void *data);

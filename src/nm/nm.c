@@ -20,48 +20,15 @@ void print_symbols(sym_t *symbols, size_t sym_nb)
     }
 }
 
-int nm64(char *filename, int file_size, void *data)
+int nm_with_data(void *data, int file_size, char *filename)
 {
-    Elf64_Ehdr *header = data;
-    sym_t *symbols = NULL;
-    Elf64_Shdr *symtab = NULL;
-    size_t sym_nb = 0;
+    int arch = check_data_conformity(data, filename);
 
-    if (check_sections_values64(header, filename, file_size, data))
+    if (arch == 1)
         return (1);
-    symbols = get_symbols64(header, data);
-    symtab = get_section64(header, ".symtab", data);
-    if (symtab == NULL)
-        return (print_error(filename, "File format not recognized"));
-    get_symbols_type64(header, &symbols, data);
-    if (symtab->sh_entsize != 0)
-        sym_nb = symtab->sh_size / symtab->sh_entsize;
-    order_symbols(symbols, sym_nb);
-    print_symbols(symbols, sym_nb);
-    free(symbols);
-    return (EXIT_SUCCESS);
-}
-
-int nm32(char *filename, int file_size, void *data)
-{
-    Elf32_Ehdr *header = data;
-    sym_t *symbols = NULL;
-    Elf32_Shdr *symtab = NULL;
-    size_t sym_nb = 0;
-
-    if (check_sections_values32(header, filename, file_size, data))
-        return (1);
-    symbols = get_symbols32(header, data);
-    symtab = get_section32(header, ".symtab", data);
-    if (symtab == NULL)
-        return (print_error(filename, "File format not recognized"));
-    get_symbols_type32(header, &symbols, data);
-    if (symtab->sh_entsize != 0)
-        sym_nb = symtab->sh_size / symtab->sh_entsize;
-    order_symbols(symbols, sym_nb);
-    print_symbols(symbols, sym_nb);
-    free(symbols);
-    return (EXIT_SUCCESS);
+    printf("\n%s:\n", filename);
+    return (arch == 64 ? nm64(filename, file_size, data) : nm32(filename,
+                file_size, data));
 }
 
 static int nm(char *filename)
@@ -75,7 +42,8 @@ static int nm(char *filename)
     if (stat(filename, &statbuf) == -1)
         return (print_error(filename, "File not found"));
     if (is_archive_format(data))
-        return (parse_archive_file(data + ARMAG_SIZE, filename));
+        return (parse_archive_file(data + ARMAG_SIZE,
+                    filename, &nm_with_data));
     arch = check_data_conformity(data, filename);
     if (arch == 1)
         return (1);
@@ -87,7 +55,7 @@ int main(int ac, char **av)
 {
     if (ac == 1)
         return (nm("a.out"));
-    for (size_t i = 1 ; i < ac ; i++) {
+    for (int i = 1 ; i < ac ; i++) {
         if (ac > 2)
             printf("\n%s:\n", av[i]);
         if (nm(av[i]))

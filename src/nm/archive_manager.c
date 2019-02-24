@@ -26,18 +26,8 @@ int is_archive_format(void *data)
     return (strncmp(data, ARMAG, ARMAG_SIZE) == 0 ? 1 : 0);
 }
 
-int nm_with_data(void *data, int file_size, char *filename)
-{
-    int arch = check_data_conformity(data, filename);
-
-    if (arch == 1)
-        return (1);
-    printf("\n%s:\n", filename);
-    return (arch == 64 ? nm64(filename, file_size, data) : nm32(filename,
-                file_size, data));
-}
-
-int parse_archive_file(void *data, char *filename)
+int parse_archive_file(void *data, char *filename,
+        int (*func)(void*, int, char*))
 {
     struct stat statbuf;
     ar_hdr_t *array = NULL;
@@ -54,7 +44,7 @@ int parse_archive_file(void *data, char *filename)
         if (size > 2) {
             update_name(data + array[1].start_off + array[size - 1].str_off,
                     &array[size - 1]);
-            nm_with_data(data + array[size - 1].start_off,
+            func(data + array[size - 1].start_off,
                     array[size - 1].size, array[size - 1].name);
         }
     }

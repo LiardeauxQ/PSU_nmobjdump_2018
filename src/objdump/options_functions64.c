@@ -67,17 +67,23 @@ static void print_section(Elf64_Shdr *section, Elf64_Shdr *strtab, void *data)
     }
 }
 
-int display_sections_content64(void *data, char *filename)
+int display_sections_content64(void *data)
 {
-    Elf64_Ehdr *header = data;
-    Elf64_Shdr *secs = data + header->e_shoff;
-    char *shstrtab = data + secs[header->e_shstrndx].sh_offset;
+    Elf64_Ehdr *hdr = data;
+    Elf64_Shdr *secs = data + hdr->e_shoff;
+    char *shstrtab = data + secs[hdr->e_shstrndx].sh_offset;
+    char *name = NULL;
 
-    for (size_t i = 0 ; i < header->e_shnum ; i++) {
-        if (secs[i].sh_type != SHT_NOBITS && secs[i].sh_type
-                != SHT_SYMTAB && data + secs[i].sh_offset != (void*)shstrtab
-                && strcmp(&shstrtab[secs[i].sh_name], ".strtab") != 0)
-            print_section(&secs[i], &secs[header->e_shstrndx], data);
+    if (hdr->e_shoff == 0)
+        return (1);
+    for (size_t i = 0 ; i < hdr->e_shnum ; i++) {
+        name = shstrtab + secs[i].sh_name;
+        if ((hdr->e_type == ET_REL && secs[i].sh_type == SHT_RELA)
+                || secs[i].sh_size == 0 || secs[i].sh_type == SHT_NOBITS
+                || !strcmp(name, ".bss") || !strcmp(name, ".strtab")
+                || !strcmp(name, ".symtab") || !strcmp(name, ".shstrtab"))
+            continue;
+        print_section(&secs[i], &secs[hdr->e_shstrndx], data);
     }
     return (0);
 }

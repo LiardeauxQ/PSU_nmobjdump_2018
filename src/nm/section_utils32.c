@@ -72,7 +72,6 @@ void get_symbols_type32(Elf32_Ehdr *header, sym_t **symbols, void *data)
         if ((*symbols)[i].link > shnum)
             continue;
         (*symbols)[i].type = get_type32(&sections[(*symbols)[i].link],
-            &sections[header->e_shstrndx],
-            &((*symbols)[i]), data);
+            &((*symbols)[i]));
     }
 }
