@@ -21,6 +21,11 @@
 #include <errno.h>
 #include <dirent.h>
 
+#define ARMAG "!<arch>\n"
+#define ARMAG_SIZE 8
+#define AR_HEADER_SIZE 60
+#define ARFMAG "`\n"
+
 typedef struct sym_s {
     unsigned char info_type;
     unsigned char bind;
@@ -30,6 +35,18 @@ typedef struct sym_s {
     unsigned long long value;
     char *name;
 } sym_t;
+
+typedef struct ar_hdr_s {
+    uint32_t str_off;
+    uint32_t uid;
+    uint32_t gid;
+    uint32_t mode;
+    uint32_t size;
+    uint64_t date;
+    uint64_t start_off;
+    char *fmag;
+    char *name;
+} ar_hdr_t;
 
 /* section_utils64.c */
 
@@ -51,12 +68,12 @@ int ascii_cmp(char *s1, char *s2);
 /* type64.c */
 
 char get_type64(Elf64_Shdr *section, Elf64_Shdr *strtab,
-		sym_t *symbol, void *data);
+    sym_t *symbol, void *data);
 
 /* type32.c */
 
 char get_type32(Elf32_Shdr *section, Elf32_Shdr *strtab,
-		sym_t *symbol, void *data);
+    sym_t *symbol, void *data);
 
 /* manage_error.c */
 
@@ -66,13 +83,28 @@ int check_data_conformity(void *data, char *filename);
 /* stock_file.c */
 
 void *stock_file(char *filename);
-int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data);
-int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data);
+int check_sections_values64(Elf64_Ehdr *header, char *filename, int file_size,
+    void *data);
+int check_sections_values32(Elf32_Ehdr *header, char *filename, int file_size,
+    void *data);
+
+/* archive_utils.c */
+
+int atoni(const char *nptr, size_t n);
+long atonl(const char *nptr, size_t n);
+void fetch_archive_header_name(void *data, ar_hdr_t *cvt);
+void update_name(char *strtab, ar_hdr_t *cvt);
+
+/* archive_manager.c */
+
+ar_hdr_t create_archive_header(void *data);
+int is_archive_format(void *data);
+int parse_archive_file(void *data, char *filename);
 
 /* nm.c */
 
-int nm64(char *filename, void *data);
-int nm32(char *filename, void *data);
+int nm64(char *filename, int file_size, void *data);
+int nm32(char *filename, int file_size, void *data);
 
 static inline char *find_bin_name(void)
 {

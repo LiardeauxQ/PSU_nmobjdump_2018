@@ -14,6 +14,8 @@ NM_SRCS	=	nm/section_utils64.c	\
 			nm/sort_symbols.c	\
 			nm/type32.c	\
 			nm/type64.c	\
+			nm/archive_manager.c	\
+			nm/archive_utils.c	\
 			nm/nm.c	\
 			stock_file.c	\
 			manage_error.c

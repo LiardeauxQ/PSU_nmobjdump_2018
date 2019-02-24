@@ -20,14 +20,14 @@ void print_symbols(sym_t *symbols, size_t sym_nb)
     }
 }
 
-int nm64(char *filename, void *data)
+int nm64(char *filename, int file_size, void *data)
 {
     Elf64_Ehdr *header = data;
     sym_t *symbols = NULL;
     Elf64_Shdr *symtab = NULL;
     size_t sym_nb = 0;
 
-    if (check_sections_values64(header, filename, data))
+    if (check_sections_values64(header, filename, file_size, data))
         return (1);
     symbols = get_symbols64(header, data);
     symtab = get_section64(header, ".symtab", data);
@@ -42,14 +42,14 @@ int nm64(char *filename, void *data)
     return (EXIT_SUCCESS);
 }
 
-int nm32(char *filename, void *data)
+int nm32(char *filename, int file_size, void *data)
 {
     Elf32_Ehdr *header = data;
     sym_t *symbols = NULL;
     Elf32_Shdr *symtab = NULL;
     size_t sym_nb = 0;
 
-    if (check_sections_values32(header, filename, data))
+    if (check_sections_values32(header, filename, file_size, data))
         return (1);
     symbols = get_symbols32(header, data);
     symtab = get_section32(header, ".symtab", data);
@@ -66,15 +66,21 @@ int nm32(char *filename, void *data)
 
 static int nm(char *filename)
 {
+    struct stat statbuf;
     void *data = stock_file(filename);
     int arch = 0;
 
     if (data == NULL)
         return (1);
+    if (stat(filename, &statbuf) == -1)
+        return (print_error(filename, "File not found"));
+    if (is_archive_format(data))
+        return (parse_archive_file(data + ARMAG_SIZE, filename));
     arch = check_data_conformity(data, filename);
     if (arch == 1)
         return (1);
-    return (arch == 64 ? nm64(filename, data) : nm32(filename, data));
+    return (arch == 64 ? nm64(filename, statbuf.st_size, data)
+            : nm32(filename, statbuf.st_size, data));
 }
 
 int main(int ac, char **av)

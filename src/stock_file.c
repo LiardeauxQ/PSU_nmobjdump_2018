@@ -29,44 +29,43 @@ void *stock_file(char *filename)
     return (data);
 }
 
-int check_sections_values64(Elf64_Ehdr *header, char *filename, void *data)
+int check_sections_values64(Elf64_Ehdr *header, char *filename, int file_size,
+        void *data)
 {
-    struct stat statbuf;
     Elf64_Shdr *sections = data + header->e_shoff;
     uint16_t shnum = (header->e_shnum == 0)
         ? sections[0].sh_size : header->e_shnum;
 
     if (header->e_shnum >= SHN_LORESERVE)
         return (print_error(filename, "File truncated")); 
-    else if (stat(filename, &statbuf) == -1
-            || header->e_shoff == 0 || shnum == 0)
+    else if (header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized")); 
-    if (header->e_shoff > statbuf.st_size)
+    if (header->e_shoff > file_size)
         return (print_error(filename, "File truncated"));
     else if (header->e_version != EV_CURRENT)
         return (print_error(filename, "File format not recognized"));
     for (size_t i = 0 ; i < shnum ; i++) {
-        if (sections[i].sh_offset >= statbuf.st_size)
+        if (sections[i].sh_offset >= file_size)
             return (print_error(filename, "No symbols"));
     }
     return (0);
 }
 
-int check_sections_values32(Elf32_Ehdr *header, char *filename, void *data)
+int check_sections_values32(Elf32_Ehdr *header, char *filename, int file_size,
+        void *data)
 {
-    struct stat statbuf;
     Elf32_Shdr *sections = data + header->e_shoff;
     uint16_t shnum = (header->e_shnum == 0)
         ? sections[0].sh_size : header->e_shnum;
 
     if (header->e_shnum >= SHN_LORESERVE)
         return (print_error(filename, "File truncated")); 
-    if (stat(filename, &statbuf) == -1 || header->e_shoff == 0 || shnum == 0)
+    if (header->e_shoff == 0 || shnum == 0)
         return (print_error(filename, "File format not recognized"));
-    if (header->e_shoff > statbuf.st_size)
+    if (header->e_shoff > file_size)
         return (print_error(filename, "File truncated"));
     for (size_t i = 0 ; i < shnum ; i++) {
-        if (sections[i].sh_offset >= statbuf.st_size)
+        if (sections[i].sh_offset >= file_size)
             return (print_error(filename, "No symbols"));
     }
     return (0);
